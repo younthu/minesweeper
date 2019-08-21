@@ -40,7 +40,7 @@ document.getElementById('size-btns').addEventListener('click', function(e) {
   render();
 });
 
-boardEl.addEventListener('click', function(e) {
+function userClick(e){
   if (winner || hitBomb) return;
   var clickedEl;
   clickedEl = e.target.tagName.toLowerCase() === 'img' ? e.target.parentElement : e.target;
@@ -49,7 +49,7 @@ boardEl.addEventListener('click', function(e) {
     var row = parseInt(clickedEl.dataset.row);
     var col = parseInt(clickedEl.dataset.col);
     var cell = board[row][col];
-    if (e.shiftKey && !cell.revealed && bombCount > 0) {
+    if ((e.shiftKey|| e.button == 2 || e.button == 3) && !cell.revealed && bombCount > 0) {
       bombCount += cell.flag() ? -1 : 1;
     } else {
       hitBomb = cell.reveal();
@@ -62,6 +62,18 @@ boardEl.addEventListener('click', function(e) {
     winner = getWinner();
     render();
   }
+}
+//这一步是为了阻止右击时系统默认的弹出框
+document.getElementById("board").oncontextmenu = function(e){
+  e.preventDefault();
+  userClick(e)
+};
+//在这里你就可以自己定义事件的函数啦
+// document.getElementById("board").onmouseup=function(oEvent) {
+// }
+
+boardEl.addEventListener('click', function(e) {
+  userClick(e)
 });
 
 function createResetListener() { 
@@ -96,8 +108,8 @@ function buildTable() {
     </td>
   <tr>
     <td class="menu" id="folder-bar" colspan="${size}">
-      <div id="folder1"><a href="https://github.com/nickarocho/minesweeper/blob/master/readme.md" target="blank">Read Me </a></div>
-      <div id="folder2"><a href="https://github.com/nickarocho/minesweeper" target="blank">Source Code</a></div>
+      <div id="folder1"><a href="https://github.com/younthu/minesweeper/blob/master/readme.md" target="blank">关于 </a></div>
+      <div id="folder2"><a href="https://github.com/younthu/minesweeper" target="blank">源码</a></div>
     </td>
   </tr>
   </tr>
